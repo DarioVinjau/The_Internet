@@ -1,29 +1,30 @@
-import sys
-import re
-import csv
-import time
-from concurrent.futures import ThreadPoolExecutor
 from playwright.sync_api import sync_playwright
 
-def test_abtest():
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
-        page = browser.new_page()
+playwright_instance = sync_playwright().start()
+browser = playwright_instance.chromium.launch(headless=False)
 
-        page.goto("https://the-internet.herokuapp.com/")
+def test_abtest(browser_instance):
+    page = browser_instance.new_page()
+    page.goto("https://the-internet.herokuapp.com/")
+    page.click("text=A/B Testing")
+    print("Titolo della pagina:", page.title())
+    print(page.text_content("//p"))
+    page.close()
 
-        #try:
-        #    page.get_by_role("button", name="Accetta tutto").click(timeout=3000)
-        #except:
-        #    pass
-        #assert page.is_visible(google_text)
-        #page.fill(google_text,"hello world")
-        page.wait_for_timeout(5000)
+def test_add_remove_elements(browser_instance):
+    page = browser_instance.new_page()
+    page.goto("https://the-internet.herokuapp.com/add_remove_elements/")
+    page.click("//button[contains(text(),'Add Element')]")
+    print("Elemento aggiunto")
+    page.wait_for_timeout(1000)
+    page.click("//button[contains(text(),'Delete')]")
+    print("Elemento eliminato")
+    page.wait_for_timeout(1000)
+    page.close()
 
-        print("Titolo della pagina:", page.title())
-
-        browser.close()
-
-
-if __name__ == "__main__":
-    test_abtest()
+try:
+    test_abtest(browser)
+    #test_add_remove_elements(browser)
+finally:
+    browser.close()
+    playwright_instance.stop()
