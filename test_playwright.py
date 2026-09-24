@@ -1,8 +1,3 @@
-from playwright.sync_api import sync_playwright
-
-playwright_instance = sync_playwright().start()
-browser = playwright_instance.chromium.launch(headless=False)
-
 def test_abtest(browser_instance):
     page = browser_instance.new_page()
     page.goto("https://the-internet.herokuapp.com/")
@@ -22,9 +17,18 @@ def test_add_remove_elements(browser_instance):
     page.wait_for_timeout(1000)
     page.close()
 
-try:
-    test_abtest(browser)
-    #test_add_remove_elements(browser)
-finally:
-    browser.close()
-    playwright_instance.stop()
+#qua dovrebbe andare in modalità incognito
+def test_basic_auth(browser_instance):
+    context = browser_instance.new_context(
+        http_credentials={
+            "username": "admin",
+            "password": "admin"
+        }
+    )
+    page = context.new_page()
+    page.goto("https://the-internet.herokuapp.com/basic_auth")
+    page.wait_for_timeout(1000)
+    page.get_by_text("Congratulations! You must have the proper credentials.")
+    print("Testo trovato")
+    page.close()
+    context.close()
