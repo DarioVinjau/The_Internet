@@ -22,9 +22,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r reqs.txt
     - name: Ensure browsers are installed
-      run: python -m playwright install --with-deps
+      run: python -m playwright install --with-deps 
     - name: Run your tests
-      run: pytest --tracing=retain-on-failure
+      run: pytest --tracing=on --output=test_results/
     - uses: actions/upload-artifact@v7
       if: ${{ !cancelled() }}
       with:
