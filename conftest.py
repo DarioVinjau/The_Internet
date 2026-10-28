@@ -9,8 +9,8 @@ is_docker = os.path.exists('/.dockerenv')
 def browser_instance():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=is_ci or is_docker)
-        context = browser.new_context()
-        context.tracing.start(screenshots=True, snapshots=True, sources=True)
+        # context = browser.new_context()
+        # context.tracing.start(screenshots=True, snapshots=True, sources=True)
         yield browser
-        context.tracing.stop(path = f"test-results/{datetime.now().strftime("%Y%m%d%H%M%S")}.zip")
+        # context.tracing.stop(path = f"test-results/{datetime.now().strftime("%Y%m%d%H%M%S")}.zip")
         browser.close()

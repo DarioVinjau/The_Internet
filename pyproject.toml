@@ -1,0 +1,7 @@
+[project]
+name = "the_internet"
+version = "0.1.0"
+description = "Learning project"
+
+[tool.pytest.ini_options]
+addopts = "--html=report.html --self-contained-html"
